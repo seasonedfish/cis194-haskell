@@ -12,6 +12,14 @@ toDigitsRev n = [n `mod` 10] ++ toDigitsRev (n `div` 10)
 
 
 -- Double every other int in list
+-- starting from the end
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther [] = []
-doubleEveryOther (firstPart ++ [secondToLast, last]) = doubleEveryOther firstPart ++ [2 * secondToLast, last] 
+doubleEveryOther list = doubleEveryOther (take (length list - 2) list) ++ doubleFirst (drop (length list - 2) list)
+
+
+-- If the list has one element, don't double.
+-- Otherwise, double the first element.
+doubleFirst :: [Integer] -> [Integer]
+doubleFirst (first:[]) = [first]
+doubleFirst (first:otherElements) = first * 2 : otherElements
