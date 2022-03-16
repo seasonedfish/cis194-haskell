@@ -33,7 +33,9 @@ exactMatches actualPegs guessPegs =
 
 -- For each peg in xs, count how many times is occurs in ys
 countColors :: Code -> [Int]
-countColors = undefined
+countColors pegs = map countOccurrences colors where
+    countOccurrences :: Peg -> Int
+    countOccurrences color = length $ filter (\peg -> peg == color) pegs
 
 -- Count number of matches between the actual code and the guess
 matches :: Code -> Code -> Int
