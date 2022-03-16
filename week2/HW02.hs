@@ -25,6 +25,7 @@ colors = [Red, Green, Blue, Yellow, Orange, Purple]
 exactMatches :: Code -> Code -> Int
 exactMatches actualPegs guessPegs =
     length $ filter foundMatch $ zip actualPegs guessPegs where 
+        foundMatch :: (Peg, Peg) -> Bool
         foundMatch (actual, guess) = actual == guess
 
 
