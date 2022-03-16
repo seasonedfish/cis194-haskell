@@ -23,12 +23,11 @@ colors = [Red, Green, Blue, Yellow, Orange, Purple]
 
 -- Get the number of exact matches between the actual code and the guess
 exactMatches :: Code -> Code -> Int
-exactMatches actual guess = accumulateExactMatches 0 actual guess
-    where accumulateExactMatches :: Int -> Code -> Code -> Int
-          accumulateExactMatches acc [] [] = acc
-          accumulateExactMatches acc (actualPeg:actualPegs) (guessPeg:guessPegs) =
-              | actualPeg == guessPeg = accumulateExactMatches (acc + 1) actualPegs guessPegs
-              | otherwise = accumulateExactMatches acc actualPegs guessPegs
+exactMatches actualPegs guessPegs = matchingPairs (zip actualPegs guessPegs)
+    where matchingPairs :: [(Peg, Peg)] -> Int
+          matchingPairs pairsList = length $ filter foundMatch pairsList where 
+              foundMatch (actual, guess) = actual == guess
+
 
 -- Exercise 2 -----------------------------------------
 
