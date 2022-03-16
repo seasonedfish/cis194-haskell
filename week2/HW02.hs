@@ -39,7 +39,11 @@ countColors pegs = map countOccurrences colors where
 
 -- Count number of matches between the actual code and the guess
 matches :: Code -> Code -> Int
-matches = undefined
+matches actualPegs guessPegs = 
+    sum $ map (\(x, y) -> min x y) $ zip actualColors guessColors where
+            actualColors = countColors actualPegs
+            guessColors = countColors guessPegs
+
 
 -- Exercise 3 -----------------------------------------
 
