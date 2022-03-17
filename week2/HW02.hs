@@ -49,7 +49,9 @@ matches actualPegs guessPegs =
 
 -- Construct a Move from a guess given the actual code
 getMove :: Code -> Code -> Move
-getMove = undefined
+getMove actualPegs guessPegs =
+    let moveExactMatches = exactMatches actualPegs guessPegs in
+    Move guessPegs moveExactMatches ((matches actualPegs guessPegs) - moveExactMatches)
 
 -- Exercise 4 -----------------------------------------
 
