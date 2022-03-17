@@ -69,12 +69,12 @@ filterCodes move codes =
 
 -- Exercise 6 -----------------------------------------
 
--- haha i could have used replicateM but i'm a masochist i guess
+-- haha i could have used replicateM *cries*
 allCodes :: Int -> [Code]
 allCodes n = (foldr (.) id (replicate n generateCodesPlusOne)) [] where
     generateCodesPlusOne :: [Code] -> [Code]
     generateCodesPlusOne codes
-      | length codes == 0 = addAllColors []
+      | null codes = addAllColors []
       | otherwise = concatMap addAllColors codes
       where
           addAllColors :: Code -> [Code]
@@ -84,7 +84,10 @@ allCodes n = (foldr (.) id (replicate n generateCodesPlusOne)) [] where
 -- Exercise 7 -----------------------------------------
 
 solve :: Code -> [Move]
-solve = undefined
+solve code =
+    where
+        getCurrentMove :: Move -> Move
+        getCurrentMove previousMove 
 
 -- Bonus ----------------------------------------------
 
