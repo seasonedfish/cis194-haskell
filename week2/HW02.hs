@@ -64,8 +64,8 @@ isConsistent (Move moveCode moveExactMatches moveNonExactMatches) code =
 -- Exercise 5 -----------------------------------------
 
 filterCodes :: Move -> [Code] -> [Code]
-filterCodes move@(Move moveCode _ _) codes =
-    filter (\code -> isConsistent move code && moveCode /= code) codes
+filterCodes move codes =
+    filter (\code -> isConsistent move code) codes
 
 -- Exercise 6 -----------------------------------------
 
@@ -84,18 +84,12 @@ allCodes n = (foldr (.) id (replicate n generateCodesPlusOne)) [] where
 -- Exercise 7 -----------------------------------------
 
 solve :: Code -> [Move]
-solve code = accumulateMoves code [Red, Red, Red, Red] where
-    -- Actual code -> guess -> list of moves
-    accumulateMoves :: Code -> Code -> [Move]
-    accumulateMoves actual guess
-      | actual == guess = []
-      | otherwise = getMove actual guess : accumulateMoves actual (getCurrentMoveCode (getMove actual guess))
-      where
-          -- Given a move, generate all possible moves and pick the first one.
-          getCurrentMoveCode :: Move -> Code
-          getCurrentMoveCode previousMove = 
-              head $ filterCodes previousMove $ allCodes 4
-              -- head is okay here because there will always be at least one
+solve code = accumulateMoves code (allCodes 4) where
+    -- Actual code -> list of possible guesses -> list of moves
+    accumulateMoves :: Code -> [Code] -> [Move]
+    accumulateMoves actual (firstCode : otherCodes)
+      | actual == firstCode = [getMove actual firstCode]
+      | otherwise = getMove actual firstCode : accumulateMoves actual (filterCodes (getMove actual firstCode) (otherCodes))
 
 -- Bonus ----------------------------------------------
 
