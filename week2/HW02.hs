@@ -56,7 +56,10 @@ getMove actualPegs guessPegs =
 -- Exercise 4 -----------------------------------------
 
 isConsistent :: Move -> Code -> Bool
-isConsistent = undefined
+isConsistent (Move moveCode moveExactMatches moveNonExactMatches) code =
+    let newExactMatches = exactMatches moveCode code in
+    newExactMatches == moveExactMatches &&
+        (matches moveCode code) - newExactMatches == moveNonExactMatches
 
 -- Exercise 5 -----------------------------------------
 
