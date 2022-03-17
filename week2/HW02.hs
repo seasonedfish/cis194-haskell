@@ -68,18 +68,17 @@ filterCodes move codes =
     filter (\code -> isConsistent move code) codes
 
 -- Exercise 6 -----------------------------------------
-addAllColors :: Code -> [Code]
-addAllColors code = map (\color -> color:code) colors
 
-
-generateCodesPlusOne :: [Code] -> [Code]
-generateCodesPlusOne [] = addAllColors []
-generateCodesPlusOne codes = concatMap addAllColors codes
-
-
+-- haha i could have used replicateM but i'm a masochist i guess
 allCodes :: Int -> [Code]
-allCodes n =
-    (foldr (.) id (replicate n generateCodesPlusOne)) []
+allCodes n = (foldr (.) id (replicate n generateCodesPlusOne)) [] where
+    generateCodesPlusOne :: [Code] -> [Code]
+    generateCodesPlusOne codes
+      | length codes == 0 = addAllColors []
+      | otherwise = concatMap addAllColors codes
+      where
+          addAllColors :: Code -> [Code]
+          addAllColors code = map (\color -> color:code) colors
 
 
 -- Exercise 7 -----------------------------------------
