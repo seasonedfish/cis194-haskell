@@ -70,7 +70,12 @@ filterCodes move codes =
 -- Exercise 6 -----------------------------------------
 
 allCodes :: Int -> [Code]
-allCodes = undefined
+allCodes n =
+    where
+        generateCodesPlusOne :: [Code] -> [Code]
+        generateCodesPlusOne codes = concatMap addAllColors codes where
+            addAllColors :: Code -> [Code]
+            addAllColors code = map (\color -> color:code) colors
 
 -- Exercise 7 -----------------------------------------
 
