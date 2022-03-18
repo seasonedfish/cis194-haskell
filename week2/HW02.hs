@@ -88,8 +88,9 @@ solve code = accumulateMoves code (allCodes 4) where
     -- Actual code -> list of possible guesses -> list of moves
     accumulateMoves :: Code -> [Code] -> [Move]
     accumulateMoves actual (firstCode : otherCodes)
-      | actual == firstCode = [getMove actual firstCode]
-      | otherwise = getMove actual firstCode : accumulateMoves actual (filterCodes (getMove actual firstCode) (otherCodes))
+      | actual == firstCode = [currentMove]
+      | otherwise = currentMove : accumulateMoves actual (filterCodes (currentMove) (otherCodes))
+      where currentMove = getMove actual firstCode
 
 -- Bonus ----------------------------------------------
 
