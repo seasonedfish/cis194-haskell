@@ -43,4 +43,12 @@ intListProduct :: IntList -> Int
 intListProduct Empty = 1
 intListProduct list@(Cons firstNumber otherNumbers) = firstNumber * intListProduct otherNumbers
 
+f :: Int -> Maybe Int
+f 0 = Nothing
+f x = Just x
+
+functionA :: Maybe Int -> Int
+functionA (Just n) = n
+functionA Nothing = (-1)
+
 
