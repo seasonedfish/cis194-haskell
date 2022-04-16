@@ -34,7 +34,12 @@ type State = String -> Int
 -- Exercise 1 -----------------------------------------
 
 extend :: State -> String -> Int -> State
-extend = undefined
+extend state variableName value =
+    newFunction where
+        newFunction :: String -> Int
+        newFunction a
+          | a == variableName = value
+          | otherwise = state a
 
 empty :: State
 empty = undefined
