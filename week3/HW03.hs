@@ -58,11 +58,11 @@ evalE state (Op exp1 bop exp2)
   | Ge <- bop = evalBoolFunction (>=) exp1 exp2
   | Lt <- bop = evalBoolFunction (<) exp1 exp2
   | Le <- bop = evalBoolFunction (<=) exp1 exp2
-  | Eql <- bop = evalIntFunction (==) exp1 exp2
+  | Eql <- bop = evalBoolFunction (==) exp1 exp2
   where evalIntFunction :: (Int -> Int -> Int) -> Expression -> Expression -> Int
         evalIntFunction function exp1 exp2 = evalE state exp1 `function` evalE state exp2
         evalBoolFunction :: (Int -> Int -> Bool) -> Expression -> Expression -> Int
-        evalBoolFunction function exp1 exp2 =
+        evalBoolFunction function exp1 exp2
             | evalE state exp1 `function` evalE state exp2 = 1
             | otherwise = 0
 
