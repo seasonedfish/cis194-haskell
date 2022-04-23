@@ -47,12 +47,12 @@ empty _ = 0
 -- Exercise 2 -----------------------------------------
 
 evalE :: State -> Expression -> Int
-evalE state Var s = state s
-evalE _ Val x = x
-evalE state Op exp1 Plus exp2 = evalE state exp1 + evalE state exp2
-evalE state Op exp1 Minus exp2 = evalE state exp1 - evalE state exp2
-evalE state Op exp1 Times exp2 = evalE state exp1 * evalE state exp2
-evalE state Op exp1 Divide exp2 = evalE state exp1 / evalE state exp2
+evalE state (Var s) = state s
+evalE _ (Val x) = x
+evalE state (Op exp1 Plus exp2) = evalE state exp1 + evalE state exp2
+evalE state (Op exp1 Minus exp2) = evalE state exp1 - evalE state exp2
+evalE state (Op exp1 Times exp2) = evalE state exp1 * evalE state exp2
+evalE state (Op exp1 Divide exp2) = evalE state exp1 `div` evalE state exp2
 
 -- Exercise 3 -----------------------------------------
 
