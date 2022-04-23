@@ -50,19 +50,19 @@ evalE :: State -> Expression -> Int
 evalE state (Var s) = state s
 evalE _ (Val x) = x
 evalE state (Op exp1 bop exp2) = case bop of
-    Plus -> evalIntFunction (+) exp1 exp2
-    Minus -> evalIntFunction (-) exp1 exp2
-    Times -> evalIntFunction (*) exp1 exp2
-    Divide -> evalIntFunction (div) exp1 exp2
-    Gt -> evalBoolFunction (>) exp1 exp2
-    Ge -> evalBoolFunction (>=) exp1 exp2
-    Lt -> evalBoolFunction (<) exp1 exp2
-    Le -> evalBoolFunction (<=) exp1 exp2
-    Eql -> evalBoolFunction (==) exp1 exp2
-    where evalIntFunction :: (Int -> Int -> Int) -> Expression -> Expression -> Int
-          evalIntFunction function exp1 exp2 = evalE state exp1 `function` evalE state exp2
-          evalBoolFunction :: (Int -> Int -> Bool) -> Expression -> Expression -> Int
-          evalBoolFunction function exp1 exp2
+    Plus -> applyIntFunction (+)
+    Minus -> applyIntFunction (-)
+    Times -> applyIntFunction (*)
+    Divide -> applyIntFunction div
+    Gt -> applyBoolFunction (>)
+    Ge -> applyBoolFunction (>=)
+    Lt -> applyBoolFunction (<)
+    Le -> applyBoolFunction (<=)
+    Eql -> applyBoolFunction (==)
+    where applyIntFunction :: (Int -> Int -> Int) -> Int
+          applyIntFunction function = evalE state exp1 `function` evalE state exp2
+          applyBoolFunction :: (Int -> Int -> Bool) -> Int
+          applyBoolFunction function
             | evalE state exp1 `function` evalE state exp2 = 1
             | otherwise = 0
 
