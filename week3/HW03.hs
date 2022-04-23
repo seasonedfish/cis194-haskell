@@ -76,8 +76,15 @@ data DietStatement = DAssign String Expression
                      deriving (Show, Eq)
 
 desugar :: Statement -> DietStatement
-desugar = undefined
-
+desugar statement = case statement of
+    Assign string exp -> DAssign string exp
+    Incr string -> DAssign string $ Op (Var string) Plus (Val 1)
+    If exp statement1 statement2 -> DIf exp (desugar statement1) (desugar statement2)
+    While exp statement -> DWhile exp (desugar statement)
+    For initialization loopCondition update body -> DSequence (desugar initialization) whileLoop where
+        whileLoop = DWhile loopCondition (DSequence (desugar body) (desugar update))
+    Sequence statement1 statement2 -> DSequence (desugar statement1) (desugar statement2)
+    Skip -> DSkip
 
 -- Exercise 4 -----------------------------------------
 
