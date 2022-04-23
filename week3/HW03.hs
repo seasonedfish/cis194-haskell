@@ -49,10 +49,18 @@ empty _ = 0
 evalE :: State -> Expression -> Int
 evalE state (Var s) = state s
 evalE _ (Val x) = x
-evalE state (Op exp1 Plus exp2) = evalE state exp1 + evalE state exp2
-evalE state (Op exp1 Minus exp2) = evalE state exp1 - evalE state exp2
-evalE state (Op exp1 Times exp2) = evalE state exp1 * evalE state exp2
-evalE state (Op exp1 Divide exp2) = evalE state exp1 `div` evalE state exp2
+evalE state (Op exp1 bop exp2)
+  | Plus <- bop = evalIntFunction (+) exp1 exp2
+  | Minus <- bop = evalIntFunction (-) exp1 exp2
+  | Times <- bop = evalIntFunction (*) exp1 exp2
+  | Divide <- bop = evalIntFunction (div) exp1 exp2
+  | Gt <- bop = evalIntFunction (\a b -> if a > b then 1 else 0) exp1 exp2
+  | Ge <- bop = evalIntFunction (\a b -> if a >= b then 1 else 0) exp1 exp2
+  | Lt <- bop = evalIntFunction (\a b -> if a < b then 1 else 0) exp1 exp2
+  | Le <- bop = evalIntFunction (\a b -> if a <= b then 1 else 0) exp1 exp2
+  | Eql <- bop = evalIntFunction (\a b -> if a == b then 1 else 0) exp1 exp2
+  where evalIntFunction :: (Int -> Int -> Int) -> Expression -> Expression -> Int
+        evalIntFunction op exp1 exp2 = evalE state exp1 `op` evalE state exp2
 
 -- Exercise 3 -----------------------------------------
 
