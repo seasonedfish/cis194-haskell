@@ -35,11 +35,12 @@ type State = String -> Int
 
 extend :: State -> String -> Int -> State
 extend state variableName value =
-    newFunction where
-        newFunction :: String -> Int
-        newFunction a
-          | a == variableName = value
-          | otherwise = state a
+    newState where
+        newState :: String -> Int
+        newState a =
+            if a == variableName
+               then value
+               else state a
 
 empty :: State
 empty _ = 0
