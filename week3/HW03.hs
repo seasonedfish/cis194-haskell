@@ -89,10 +89,22 @@ desugar statement = case statement of
 -- Exercise 4 -----------------------------------------
 
 evalSimple :: State -> DietStatement -> State
-evalSimple = undefined
+evalSimple state dietStatement = case dietStatement of
+    DAssign string exp -> extend state string (evalE state exp)
+    DIf condition trueStatement falseStatement ->
+        if (evalE state condition == 1)
+           then evalSimple state trueStatement
+           else evalSimple state falseStatement
+    DWhile condition dietStatement ->
+        if (evalE state condition == 1)
+           then evalSimple (evalSimple state dietStatement) (DWhile condition dietStatement)
+           else state
+    DSequence dietStatement1 dietStatement2 -> 
+        evalSimple (evalSimple state dietStatement1) dietStatement2
+    DSkip -> state
 
 run :: State -> Statement -> State
-run = undefined
+run state statement = evalSimple state (desugar statement)
 
 -- Programs -------------------------------------------
 
