@@ -11,7 +11,7 @@ toDigits n = toDigits (n `div` 10) ++ [n `mod` 10]
 -- Same but reverse
 toDigitsRev :: Integer -> [Integer]
 toDigitsRev 0 = []
-toDigitsRev n = [n `mod` 10] ++ toDigitsRev (n `div` 10)
+toDigitsRev n = (n `mod` 10) : toDigitsRev (n `div` 10)
 
 
 -- Double every other int in list
@@ -24,7 +24,7 @@ doubleEveryOther list = doubleEveryOther (take (length list - 2) list) ++ double
 -- If the list has one element, don't double.
 -- Otherwise, double the first element.
 doubleFirst :: [Integer] -> [Integer]
-doubleFirst (firstNumber:[]) = [firstNumber]
+doubleFirst [firstNumber] = [firstNumber]
 doubleFirst (firstNumber:otherNumbers) = firstNumber * 2 : otherNumbers
 
 
@@ -32,8 +32,8 @@ doubleFirst (firstNumber:otherNumbers) = firstNumber * 2 : otherNumbers
 sumDigits :: [Integer] -> Integer
 sumDigits [] = 0
 sumDigits (firstNumber:otherNumbers)
-  | firstNumber `div` 10 == 0 = firstNumber + sumDigits(otherNumbers)
-  | otherwise = firstNumber `mod` 10 + (firstNumber `div` 10) `mod` 10 + sumDigits(otherNumbers)
+  | firstNumber `div` 10 == 0 = firstNumber + sumDigits otherNumbers
+  | otherwise = firstNumber `mod` 10 + (firstNumber `div` 10) `mod` 10 + sumDigits otherNumbers
 
 -- Validate credit card
 validate :: Integer -> Bool
