@@ -35,12 +35,12 @@ exactMatches actualPegs guessPegs =
 countColors :: Code -> [Int]
 countColors pegs = map countOccurrences colors where
     countOccurrences :: Peg -> Int
-    countOccurrences color = length $ filter (\peg -> peg == color) pegs
+    countOccurrences color = length $ filter (== color) pegs
 
 -- Count number of matches between the actual code and the guess
 matches :: Code -> Code -> Int
 matches actualPegs guessPegs = 
-    sum $ map (\(x, y) -> min x y) $ zip actualColors guessColors where
+    sum $ zipWith min actualColors guessColors where
             actualColors = countColors actualPegs
             guessColors = countColors guessPegs
 
@@ -64,21 +64,21 @@ isConsistent (Move moveCode moveExactMatches moveNonExactMatches) code =
 -- Exercise 5 -----------------------------------------
 
 filterCodes :: Move -> [Code] -> [Code]
-filterCodes move codes =
-    filter (\code -> isConsistent move code) codes
+filterCodes move =
+    filter (isConsistent move)
 
 -- Exercise 6 -----------------------------------------
 
 -- haha i could have used replicateM *cries*
 allCodes :: Int -> [Code]
-allCodes n = (foldr (.) id (replicate n generateCodesPlusOne)) [] where
+allCodes n = foldr ($) [] (replicate n generateCodesPlusOne) where
     generateCodesPlusOne :: [Code] -> [Code]
     generateCodesPlusOne codes
       | null codes = addAllColors []
       | otherwise = concatMap addAllColors codes
       where
           addAllColors :: Code -> [Code]
-          addAllColors code = map (\color -> color:code) colors
+          addAllColors code = map (: code) colors
 
 
 -- Exercise 7 -----------------------------------------
@@ -89,7 +89,7 @@ solve code = accumulateMoves code (allCodes 4) where
     accumulateMoves :: Code -> [Code] -> [Move]
     accumulateMoves actual (firstCode : otherCodes)
       | actual == firstCode = [currentMove]
-      | otherwise = currentMove : accumulateMoves actual (filterCodes (currentMove) (otherCodes))
+      | otherwise = currentMove : accumulateMoves actual (filterCodes currentMove otherCodes)
       where currentMove = getMove actual firstCode
 
 -- Bonus ----------------------------------------------
