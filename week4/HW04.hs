@@ -32,16 +32,18 @@ instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
         -- Base case.
         accumulateTerms [single] degree = show single ++ showX degree
         -- Recursive cases.
-        accumulateTerms (0:others) degree = accumulateTerms others (degree + 1)
-        accumulateTerms (1:others) degree
-                | degree == 0 = accumulateTerms others (degree + 1) ++ " + 1"
-                | otherwise = accumulateTerms others (degree + 1) ++ " + " ++ showX degree
-        accumulateTerms (first:others) degree = accumulateTerms others (degree + 1) ++ " + " ++ show first ++ showX degree
+        accumulateTerms (first:others) degree = case first of
+            0 -> accumulateTerms others (degree + 1)
+            1 | degree == 0 -> accumulateTerms others (degree + 1) ++ " + 1"
+              | otherwise -> accumulateTerms others (degree + 1) ++ " + " ++ showX degree
+            -1 | degree == 0 -> accumulateTerms others (degree + 1) ++ " + -1"
+               | otherwise -> accumulateTerms others (degree + 1) ++ " + -" ++ showX degree
+            _ -> accumulateTerms others (degree + 1) ++ " + " ++ show first ++ showX degree
         showX :: Int -> String
         showX degree
-                | degree == 0 = ""
-                | degree == 1 = "x"
-                | otherwise = "x^" ++ show degree
+            | degree == 0 = ""
+            | degree == 1 = "x"
+            | otherwise = "x^" ++ show degree
 
                 
 -- Exercise 4 -----------------------------------------
