@@ -24,15 +24,24 @@ instance (Num a, Eq a) => Eq (Poly a) where
 -- Exercise 3 -----------------------------------------
 
 instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
-    show (P coefficients) = accumulateTerms coefficients 0 where
+    show (P coefficients) = accumulateTerms (dropTrailingZeros coefficients) 0 where
         accumulateTerms :: [a] -> Int -> String
-        accumulateTerms [] _ = ""
+        -- Special case: if a polynomial consisting of all zeroes is passed to the outer function,
+        -- the inner function will be passed an empty list.
+        accumulateTerms [] _ = "0"
+        -- Base case.
+        accumulateTerms [single] degree = show single ++ showX degree
+        -- Recursive cases.
         accumulateTerms (0:others) degree = accumulateTerms others (degree + 1)
         accumulateTerms (1:others) degree
                 | degree == 0 = accumulateTerms others (degree + 1) ++ " + 1"
-                | otherwise = accumulateTerms others (degree + 1) ++ " + x^" ++ show degree
-        accumulateTerms [single] degree = show single ++ "x^" ++ show degree
-        accumulateTerms (first:others) degree = accumulateTerms others (degree + 1) ++ " + " ++ show first ++ "x^" ++ show degree
+                | otherwise = accumulateTerms others (degree + 1) ++ " + " ++ showX degree
+        accumulateTerms (first:others) degree = accumulateTerms others (degree + 1) ++ " + " ++ show first ++ showX degree
+        showX :: Int -> String
+        showX degree
+                | degree == 0 = ""
+                | degree == 1 = "x"
+                | otherwise = "x^" ++ show degree
 
                 
 -- Exercise 4 -----------------------------------------
