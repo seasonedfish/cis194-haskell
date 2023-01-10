@@ -51,14 +51,15 @@ instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
 -- Exercise 4 -----------------------------------------
 
 polyToList :: Poly a -> [a]
-polyToList (P y) = y
+polyToList (P l) = l
 
 plus :: Num a => Poly a -> Poly a -> Poly a
 plus (P []) (P []) = P []
 plus (P [y]) (P []) = P [y]
+plus (P []) (P l@(_:_)) = P l
+plus (P l@(_:_:_)) (P []) = P l
 plus (P (y:ys)) (P (z:zs)) = P ((y + z) : polyToList (plus (P ys) (P zs)))
-plus (P []) (P (z:zs)) = P (z : polyToList (plus (P []) (P zs)))
-plus (P (y1:y2:ys)) (P []) = P ([y1, y2] ++ polyToList (plus (P ys) (P [])))
+
 
 
 -- Exercise 5 -----------------------------------------
