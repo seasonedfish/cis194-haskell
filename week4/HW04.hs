@@ -17,11 +17,13 @@ x = P [0, 1]
 dropTrailingZeros :: (Eq a, Num a) => [a] -> [a]
 dropTrailingZeros poly = reverse poly & dropWhile (==0) & reverse
 
-
 instance (Num a, Eq a) => Eq (Poly a) where
     (==) (P coefficients1) (P coefficients2) = dropTrailingZeros coefficients1 == dropTrailingZeros coefficients2
  
 -- Exercise 3 -----------------------------------------
+
+polyToList :: Poly a -> [a]
+polyToList (P l) = l
 
 instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
     show = flip accumulateTerms 0 . dropTrailingZeros . polyToList where
@@ -43,12 +45,8 @@ instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
         showTerm (-1) 1 = "-x"
         showTerm (-1) degree = "-x^" ++ show degree
         showTerm coefficient degree = show coefficient ++ "x^" ++ show degree
-
                 
 -- Exercise 4 -----------------------------------------
-
-polyToList :: Poly a -> [a]
-polyToList (P l) = l
 
 plus :: Num a => Poly a -> Poly a -> Poly a
 plus (P []) (P []) = P []
@@ -89,4 +87,3 @@ class Num a => Differentiable a where
 
 instance Num a => Differentiable (Poly a) where
     deriv = undefined
-
