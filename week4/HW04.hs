@@ -24,28 +24,25 @@ instance (Num a, Eq a) => Eq (Poly a) where
 -- Exercise 3 -----------------------------------------
 
 instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
-    show (P coefficients) = accumulateTerms (dropTrailingZeros coefficients) 0 where
+    show = flip accumulateTerms 0 . dropTrailingZeros . polyToList where
         accumulateTerms :: [a] -> Int -> String
         -- Special case: if a polynomial consisting of all zeroes is passed to the outer function,
         -- the inner function will be passed an empty list.
         accumulateTerms [] _ = "0"
-        -- Base cases.
-        accumulateTerms [1] degree = showX degree
-        accumulateTerms [-1] degree = "-" ++ showX degree
-        accumulateTerms [single] degree = show single ++ showX degree
-        -- Recursive cases.
-        accumulateTerms (first:others) degree = case first of
-            0 -> accumulateTerms others (degree + 1)
-            1 | degree == 0 -> accumulateTerms others (degree + 1) ++ " + 1"
-              | otherwise -> accumulateTerms others (degree + 1) ++ " + " ++ showX degree
-            -1 | degree == 0 -> accumulateTerms others (degree + 1) ++ " + -1"
-               | otherwise -> accumulateTerms others (degree + 1) ++ " + -" ++ showX degree
-            _ -> accumulateTerms others (degree + 1) ++ " + " ++ show first ++ showX degree
-        showX :: Int -> String
-        showX degree
-            | degree == 0 = ""
-            | degree == 1 = "x"
-            | otherwise = "x^" ++ show degree
+        -- Base case.
+        accumulateTerms [coefficient] degree = showTerm coefficient degree
+        -- Recursive case.
+        accumulateTerms (coefficient:coefficients) degree =
+            accumulateTerms coefficients (degree + 1) ++ case coefficient of
+              0 -> ""
+              _ -> " + " ++ showTerm coefficient degree
+        showTerm :: a -> Int -> String
+        showTerm coefficient 0 = show coefficient
+        showTerm 1 1 = "x"
+        showTerm 1 degree = "x^" ++ show degree
+        showTerm (-1) 1 = "-x"
+        showTerm (-1) degree = "-x^" ++ show degree
+        showTerm coefficient degree = show coefficient ++ "x^" ++ show degree
 
                 
 -- Exercise 4 -----------------------------------------
@@ -59,8 +56,6 @@ plus (P [y]) (P []) = P [y]
 plus (P []) (P l@(_:_)) = P l
 plus (P l@(_:_:_)) (P []) = P l
 plus (P (y:ys)) (P (z:zs)) = P ((y + z) : polyToList (plus (P ys) (P zs)))
-
-
 
 -- Exercise 5 -----------------------------------------
 
