@@ -29,7 +29,9 @@ instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
         -- Special case: if a polynomial consisting of all zeroes is passed to the outer function,
         -- the inner function will be passed an empty list.
         accumulateTerms [] _ = "0"
-        -- Base case.
+        -- Base cases.
+        accumulateTerms [1] degree = showX degree
+        accumulateTerms [-1] degree = "-" ++ showX degree
         accumulateTerms [single] degree = show single ++ showX degree
         -- Recursive cases.
         accumulateTerms (first:others) degree = case first of
