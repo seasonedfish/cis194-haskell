@@ -44,6 +44,7 @@ instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
         showTerm 1 degree = "x^" ++ show degree
         showTerm (-1) 1 = "-x"
         showTerm (-1) degree = "-x^" ++ show degree
+        showTerm coefficient 1 = show coefficient ++ "x"
         showTerm coefficient degree = show coefficient ++ "x^" ++ show degree
 
 -- Exercise 4 -----------------------------------------
