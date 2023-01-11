@@ -36,8 +36,8 @@ instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
         -- Recursive case.
         accumulateTerms (coefficient:coefficients) degree =
             accumulateTerms coefficients (degree + 1) ++ case coefficient of
-              0 -> ""
-              _ -> " + " ++ showTerm coefficient degree
+                0 -> ""
+                _ -> " + " ++ showTerm coefficient degree
         showTerm :: a -> Int -> String
         showTerm coefficient 0 = show coefficient
         showTerm 1 1 = "x"
