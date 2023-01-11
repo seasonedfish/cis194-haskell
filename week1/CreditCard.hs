@@ -24,6 +24,7 @@ doubleEveryOther list = doubleEveryOther (take (length list - 2) list) ++ double
 -- If the list has one element, don't double.
 -- Otherwise, double the first element.
 doubleFirst :: [Integer] -> [Integer]
+doubleFirst [] = []
 doubleFirst [firstNumber] = [firstNumber]
 doubleFirst (firstNumber:otherNumbers) = firstNumber * 2 : otherNumbers
 

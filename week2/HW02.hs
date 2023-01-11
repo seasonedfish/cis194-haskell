@@ -51,7 +51,7 @@ matches actualPegs guessPegs =
 getMove :: Code -> Code -> Move
 getMove actualPegs guessPegs =
     let moveExactMatches = exactMatches actualPegs guessPegs in
-    Move guessPegs moveExactMatches ((matches actualPegs guessPegs) - moveExactMatches)
+    Move guessPegs moveExactMatches (matches actualPegs guessPegs - moveExactMatches)
 
 -- Exercise 4 -----------------------------------------
 
@@ -59,7 +59,7 @@ isConsistent :: Move -> Code -> Bool
 isConsistent (Move moveCode moveExactMatches moveNonExactMatches) code =
     let newExactMatches = exactMatches moveCode code in
     newExactMatches == moveExactMatches &&
-        (matches moveCode code) - newExactMatches == moveNonExactMatches
+        matches moveCode code - newExactMatches == moveNonExactMatches
 
 -- Exercise 5 -----------------------------------------
 
@@ -87,6 +87,7 @@ solve :: Code -> [Move]
 solve code = accumulateMoves code (allCodes 4) where
     -- Actual code -> list of possible guesses -> list of moves
     accumulateMoves :: Code -> [Code] -> [Move]
+    accumulateMoves _ [] = []
     accumulateMoves actual (firstCode : otherCodes)
       | actual == firstCode = [currentMove]
       | otherwise = currentMove : accumulateMoves actual (filterCodes currentMove otherCodes)
