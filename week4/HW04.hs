@@ -19,7 +19,7 @@ dropTrailingZeros poly = reverse poly & dropWhile (==0) & reverse
 
 instance (Num a, Eq a) => Eq (Poly a) where
     (==) (P coefficients1) (P coefficients2) = dropTrailingZeros coefficients1 == dropTrailingZeros coefficients2
- 
+
 -- Exercise 3 -----------------------------------------
 
 polyToList :: Poly a -> [a]
@@ -45,7 +45,7 @@ instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
         showTerm (-1) 1 = "-x"
         showTerm (-1) degree = "-x^" ++ show degree
         showTerm coefficient degree = show coefficient ++ "x^" ++ show degree
-                
+
 -- Exercise 4 -----------------------------------------
 
 plus :: Num a => Poly a -> Poly a -> Poly a
@@ -57,8 +57,21 @@ plus (P (y:ys)) (P (z:zs)) = P ((y + z) : polyToList (plus (P ys) (P zs)))
 
 -- Exercise 5 -----------------------------------------
 
-times :: Num a => Poly a -> Poly a -> Poly a
-times = undefined
+times :: forall a. Num a => Poly a -> Poly a -> Poly a
+times b c = sum (foil b c 0) where
+    -- foil takes two polynomials and the starting degree of the first polynomial.
+    -- It returns a list of polynomials that when summed, results in the product.
+    -- foil (P [1, 1, 1]) (P [2, 2]) 0 == [P [2, 2], P [0, 2, 2], P [0, 0, 2, 2]]
+    foil :: Poly a -> Poly a -> Int -> [Poly a]
+    foil (P []) _ _ = []
+    foil (P (y:ys)) (P m) leftDegree =
+        shiftDegree (P [y * z | z <- m]) leftDegree : foil (P ys) (P m) (leftDegree + 1)
+    -- shiftDegree increases the degree of each term in the given polynomial by the given int.
+    -- shiftDegree 2 (P [1, 2, 3]) == P [0, 0, 1, 2, 3]
+    shiftDegree :: Poly a -> Int -> Poly a
+    shiftDegree (P l) degree = P (replicate degree 0 ++ l)
+
+
 
 -- Exercise 6 -----------------------------------------
 
