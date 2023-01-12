@@ -3,8 +3,6 @@
 
 module HW04 where
 
-import Data.Function
-
 newtype Poly a = P [a]
 
 -- Exercise 1 -----------------------------------------
@@ -14,30 +12,29 @@ x = P [0, 1]
 
 -- Exercise 2 ----------------------------------------
 
-dropTrailingZeros :: (Eq a, Num a) => [a] -> [a]
-dropTrailingZeros poly = reverse poly & dropWhile (==0) & reverse
+dropTrailingZeros :: (Num a, Eq a) => Poly a -> Poly a
+dropTrailingZeros (P l) = (P . reverse . dropWhile (== 0) . reverse) l
 
 instance (Num a, Eq a) => Eq (Poly a) where
-    (==) (P coefficients1) (P coefficients2) = dropTrailingZeros coefficients1 == dropTrailingZeros coefficients2
+    (==) p q = dropTrailingZeros p `exactlyEquals` dropTrailingZeros q where
+        exactlyEquals :: Poly a -> Poly a -> Bool
+        exactlyEquals (P l) (P m) = l == m
 
 -- Exercise 3 -----------------------------------------
 
-polyToList :: Poly a -> [a]
-polyToList (P l) = l
-
 instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
-    show = flip accumulateTerms 0 . dropTrailingZeros . polyToList where
-        accumulateTerms :: [a] -> Int -> String
+    show = flip accumulateString 0 . dropTrailingZeros where
+        accumulateString :: Poly a -> Int -> String
         -- Special case: if a polynomial consisting of all zeroes is passed to the outer function,
         -- the inner function will be passed an empty list.
-        accumulateTerms [] _ = "0"
+        accumulateString (P []) _ = "0"
         -- Base case.
-        accumulateTerms [coefficient] degree = showTerm coefficient degree
+        accumulateString (P [y]) degree = showTerm y degree
         -- Recursive case.
-        accumulateTerms (coefficient:coefficients) degree =
-            accumulateTerms coefficients (degree + 1) ++ case coefficient of
+        accumulateString (P (y:ys)) degree =
+            accumulateString (P ys) (degree + 1) ++ case y of
                 0 -> ""
-                _ -> " + " ++ showTerm coefficient degree
+                _ -> " + " ++ showTerm y degree
         showTerm :: a -> Int -> String
         showTerm coefficient 0 = show coefficient
         showTerm 1 1 = "x"
@@ -48,6 +45,9 @@ instance forall a. (Num a, Eq a, Show a) => Show (Poly a) where
         showTerm coefficient degree = show coefficient ++ "x^" ++ show degree
 
 -- Exercise 4 -----------------------------------------
+
+polyToList :: Poly a -> [a]
+polyToList (P l) = l
 
 plus :: Num a => Poly a -> Poly a -> Poly a
 plus (P []) (P []) = P []
@@ -71,8 +71,6 @@ times b c = sum (foil b c 0) where
     -- shiftDegree 2 (P [1, 2, 3]) == P [0, 0, 1, 2, 3]
     shiftDegree :: Poly a -> Int -> Poly a
     shiftDegree (P l) degree = P (replicate degree 0 ++ l)
-
-
 
 -- Exercise 6 -----------------------------------------
 
