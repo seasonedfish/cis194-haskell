@@ -87,8 +87,12 @@ instance Num a => Num (Poly a) where
 
 -- Exercise 7 -----------------------------------------
 
-applyP :: Num a => Poly a -> a -> a
-applyP = undefined
+applyP :: forall a. Num a => Poly a -> a -> a
+applyP p val = accumulateSum p 0 where
+    accumulateSum :: Poly a -> Int -> a
+    accumulateSum (P []) _ = 0
+    accumulateSum (P (coefficient:coefficients)) degree = 
+        coefficient * val^degree + accumulateSum (P coefficients) (degree + 1)
 
 -- Exercise 8 -----------------------------------------
 
