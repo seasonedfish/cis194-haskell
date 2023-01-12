@@ -77,7 +77,7 @@ times b c = sum (foil b c 0) where
 instance Num a => Num (Poly a) where
     (+) = plus
     (*) = times
-    negate (P l) = P [(-1) * y | y <- l]
+    negate p = P [-1] * p
     fromInteger y = P [fromIntegral y]
     -- No meaningful definitions exist
     abs    = undefined
