@@ -99,8 +99,8 @@ applyP p val = accumulateSum p 0 where
 class Num a => Differentiable a where
     deriv  :: a -> a
     nderiv :: Int -> a -> a
-    nderiv 1 f = deriv f
-    nderiv n f = deriv (nderiv (n - 1) f)
+    -- https://stackoverflow.com/a/3911161
+    nderiv n = foldr (.) id (replicate n deriv)
 
 -- Exercise 9 -----------------------------------------
 
