@@ -99,9 +99,12 @@ applyP p val = accumulateSum p 0 where
 class Num a => Differentiable a where
     deriv  :: a -> a
     nderiv :: Int -> a -> a
-    nderiv = undefined
+    nderiv 1 f = deriv f
+    nderiv n f = deriv (nderiv (n - 1) f)
 
 -- Exercise 9 -----------------------------------------
 
-instance Num a => Differentiable (Poly a) where
-    deriv = undefined
+instance forall a. Num a => Differentiable (Poly a) where
+    deriv (P []) = P []
+    deriv (P (_:ys)) = P (zipWith (*) ys oneToInf) where
+        oneToInf = map fromInteger [1..]
