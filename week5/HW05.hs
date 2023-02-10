@@ -5,6 +5,7 @@ module HW05 where
 import Data.ByteString.Lazy (ByteString)
 import Data.Map.Strict (Map)
 import System.Environment (getArgs)
+import Data.Bits (xor)
 
 import qualified Data.ByteString.Lazy as BS
 import qualified Data.Map.Strict as Map
@@ -14,7 +15,10 @@ import Parser
 -- Exercise 1 -----------------------------------------
 
 getSecret :: FilePath -> FilePath -> IO ByteString
-getSecret = undefined
+getSecret originalPath modifiedPath = do
+  originalFile <- BS.readFile originalPath
+  modifiedFile <- BS.readFile modifiedPath
+  return zipWith xor originalFile modifiedFile
 
 -- Exercise 2 -----------------------------------------
 
