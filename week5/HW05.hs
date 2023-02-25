@@ -23,8 +23,12 @@ getSecret originalPath modifiedPath = do
 -- Exercise 2 -----------------------------------------
 
 decryptWithKey :: ByteString -> FilePath -> IO ()
-decryptWithKey = undefined
+decryptWithKey key outputPath = do
+  encryptedFile <- BS.readFile (outputPath ++ ".enc")
+  let decryptedFile = BS.pack $ BS.zipWith xor encryptedFile (BS.cycle key) in
+    BS.writeFile outputPath decryptedFile
 
+  
 -- Exercise 3 -----------------------------------------
 
 parseFile :: FromJSON a => FilePath -> IO (Maybe a)
