@@ -25,9 +25,8 @@ getSecret originalPath modifiedPath = do
 decryptWithKey :: ByteString -> FilePath -> IO ()
 decryptWithKey key outputPath = do
   encryptedFile <- BS.readFile (outputPath ++ ".enc")
-  let decryptedFile = BS.pack $ BS.zipWith xor encryptedFile (BS.cycle key) in
-    BS.writeFile outputPath decryptedFile
-
+  let decryptedFile = BS.pack $ BS.zipWith xor encryptedFile (BS.cycle key)
+  BS.writeFile outputPath decryptedFile
   
 -- Exercise 3 -----------------------------------------
 
