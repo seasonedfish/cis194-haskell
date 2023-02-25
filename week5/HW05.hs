@@ -18,7 +18,7 @@ getSecret :: FilePath -> FilePath -> IO ByteString
 getSecret originalPath modifiedPath = do
   originalFile <- BS.readFile originalPath
   modifiedFile <- BS.readFile modifiedPath
-  return zipWith xor originalFile modifiedFile
+  return $ BS.pack (BS.zipWith xor originalFile modifiedFile)
 
 -- Exercise 2 -----------------------------------------
 
