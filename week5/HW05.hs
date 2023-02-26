@@ -9,6 +9,8 @@ import Data.Bits (xor)
 
 import qualified Data.ByteString.Lazy as BS
 import qualified Data.Map.Strict as Map
+import qualified Data.Set as Set
+import qualified Data.Maybe as Maybe
 
 import Parser
 
@@ -38,7 +40,17 @@ parseFile jsonPath = do
 -- Exercise 4 -----------------------------------------
 
 getBadTs :: FilePath -> FilePath -> IO (Maybe [Transaction])
-getBadTs = undefined
+getBadTs victimsPath transactionsPath = do
+  maybeVictims <- parseFile victimsPath
+  maybeTransactions <- parseFile transactionsPath
+  
+  return $ getBadTs' maybeVictims maybeTransactions where
+    getBadTs' :: Maybe [TId] -> Maybe [Transaction] -> Maybe [Transaction]
+    getBadTs' (Just victims) (Just transactions) = do
+      let victimsSet = Set.fromList victims
+      let inVictimsSet (Transaction {tid=thisTid}) = thisTid `Set.member` victimsSet
+      return $ filter inVictimsSet transactions
+    getBadTs' _ _ = Nothing
 
 -- Exercise 5 -----------------------------------------
 
