@@ -31,7 +31,9 @@ decryptWithKey key outputPath = do
 -- Exercise 3 -----------------------------------------
 
 parseFile :: FromJSON a => FilePath -> IO (Maybe a)
-parseFile = undefined
+parseFile jsonPath = do
+  jsonFile <- BS.readFile jsonPath
+  return $ decode jsonFile
 
 -- Exercise 4 -----------------------------------------
 
