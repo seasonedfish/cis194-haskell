@@ -63,7 +63,16 @@ getFlow transactions = Map.fromListWith (+) (toDeltas transactions) where
 -- Exercise 6 -----------------------------------------
 
 getCriminal :: Map String Integer -> String
-getCriminal = undefined
+getCriminal flowMap = Maybe.fromMaybe "Criminal not found" $ accumulateMax Nothing $ Map.toList flowMap where
+  accumulateMax :: Maybe (String, Integer) -> [(String, Integer)] -> Maybe String
+  accumulateMax Nothing list = case list of
+    [] -> Nothing
+    [(name, _)] -> Just name
+    (flow:flows) -> accumulateMax (Just flow) flows
+  accumulateMax (Just maxFlow@(maxName, maxDelta)) list = case list of
+    [] -> Just maxName
+    [(name, delta)] -> Just (if delta > maxDelta then name else maxName)
+    (flow@(_, delta):flows) -> accumulateMax (Just (if delta > maxDelta then flow else maxFlow)) flows
 
 -- Exercise 7 -----------------------------------------
 
