@@ -55,7 +55,10 @@ getBadTs victimsPath transactionsPath = do
 -- Exercise 5 -----------------------------------------
 
 getFlow :: [Transaction] -> Map String Integer
-getFlow = undefined
+getFlow transactions = Map.fromListWith (+) (toDeltas transactions) where
+  toDeltas :: [Transaction] -> [(String, Integer)]
+  toDeltas = concatMap (\t -> [(to t, amount t), (from t, -1 * amount t)])
+
 
 -- Exercise 6 -----------------------------------------
 
