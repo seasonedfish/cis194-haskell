@@ -70,7 +70,32 @@ getCriminal flowMap = fst $ List.maximumBy (Ord.comparing snd) (Map.toList flowM
 -- Exercise 7 -----------------------------------------
 
 undoTs :: Map String Integer -> [TId] -> [Transaction]
-undoTs = undefined
+undoTs flowMap tids = populateTids tids $ getUndoingTs (getPayers flowList) (getPayees flowList) where
+  flowList = Map.toList flowMap
+  getPayees = List.sortBy (Ord.comparing snd) . filter ((<0) . snd)
+  -- Use Ord.Down to reverse the sort
+  -- https://ro-che.info/articles/2016-04-02-descending-sort-haskell
+  getPayers = List.sortBy (Ord.comparing (Ord.Down . snd)) . filter ((>0) . snd)
+
+  -- payer -> payee -> transaction with empty tid
+  getUndoingT :: (String, Integer) -> (String, Integer) -> Transaction
+  getUndoingT (payerName, payerSurplus) (payeeName, payeeDeficit) =
+    Transaction {from=payerName, to=payeeName, amount=min payerSurplus (abs payeeDeficit), tid=""}
+
+  -- payers -> payees -> list of undoing transactions with empty tid
+  getUndoingTs :: [(String, Integer)] -> [(String, Integer)] -> [Transaction]
+  getUndoingTs [] _ = []
+  getUndoingTs _ [] = []
+  getUndoingTs ((_, 0):payers) payees = getUndoingTs payers payees
+  getUndoingTs payers ((_, 0):payees) = getUndoingTs payers payees
+  getUndoingTs [payer] [payee] = [getUndoingT payer payee]
+  getUndoingTs (payer@(payerName, payerSurplus):payers) (payee@(payeeName, payeeDeficit):payees)
+    | payerSurplus <= abs payeeDeficit = getUndoingT payer payee : getUndoingTs payers ((payeeName, payeeDeficit + payerSurplus):payees)
+    | otherwise = getUndoingT payer payee : getUndoingTs ((payerName, payerSurplus + payeeDeficit):payers) payees
+
+  -- replaces the tids of the transactions using the list of tids
+  populateTids :: [TId] -> [Transaction] -> [Transaction]
+  populateTids = zipWith (\tid t -> t {tid=tid})
 
 -- Exercise 8 -----------------------------------------
 
