@@ -10,7 +10,6 @@ import Data.Bits (xor)
 import qualified Data.ByteString.Lazy as BS
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
-import qualified Data.Maybe as Maybe
 import qualified Data.Ord as Ord
 import qualified Data.List as List
 
