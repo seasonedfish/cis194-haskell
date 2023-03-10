@@ -100,7 +100,7 @@ undoTs flowMap tids = populateTids tids $ getUndoingTs (getPayers flowList) (get
 -- Exercise 8 -----------------------------------------
 
 writeJSON :: ToJSON a => FilePath -> a -> IO ()
-writeJSON = undefined
+writeJSON f j = BS.writeFile f (encode j)
 
 -- Exercise 9 -----------------------------------------
 
