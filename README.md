@@ -9,3 +9,4 @@ course.
 2. Mastermind solver
 3. SImPL interpreter
 4. Polynomial data type
+5. Trouble at Haskell Bank
