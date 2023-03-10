@@ -124,15 +124,14 @@ doEverything dog1 dog2 trans vict fids out = do
 main :: IO ()
 main = do
   args <- getArgs
-  crim <- 
-    case args of
-      dog1:dog2:trans:vict:ids:out:_ ->
-          doEverything dog1 dog2 trans vict ids out
-      _ -> doEverything "dog-original.jpg"
-                        "dog.jpg"
-                        "transactions.json"
-                        "victims.json"
-                        "new-ids.json"
-                        "new-transactions.json"
+  crim <- case args of
+    dog1:dog2:trans:vict:ids:out:_ -> doEverything dog1 dog2 trans vict ids out
+    _ -> let dir = "clues/" in
+      doEverything (dir ++ "dog-original.jpg")
+                   (dir ++ "dog.jpg")
+                   (dir ++ "transactions.json")
+                   (dir ++ "victims.json")
+                   (dir ++ "new-ids.json")
+                   (dir ++ "new-transactions.json")
   putStrLn crim
 
